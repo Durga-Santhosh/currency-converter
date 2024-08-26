@@ -4,7 +4,10 @@ let btn=document.querySelector(".btn-70");
 let fromCurr=document.querySelector(".one");
 let toCurr=document.querySelector(".two");
 let result=document.querySelector("#result")
-
+let swap=document.getElementById("swap");
+let flg1=document.querySelector(".flg1");
+let flg2=document.querySelector(".flg2");
+//country list
 const countryList = {
     AED: "AE",
     AFN: "AF",
@@ -166,7 +169,7 @@ const countryList = {
     ZMK: "ZM",
     ZWD: "ZW",
   };
-
+// changing options
 let i=0;
 for(let select of opt)
 {
@@ -189,6 +192,7 @@ for(let select of opt)
         updateFlage(evt.target)
     })
 }
+//updating
 const updateFlage=(element)=>{
     let currCode=element.value;
     let countrycode=countryList[currCode];
@@ -196,35 +200,57 @@ const updateFlage=(element)=>{
     let img= element.parentElement.querySelector("img");
     img.src=newsrc; 
 }
+//Geting answers
 btn.addEventListener("click",async(evt)=>{
   evt.preventDefault();
   let inp=document.querySelector(".in")
   let amount=inp.value;
   if(amount==="" ||amount<1)
   {
-    alert("Please enter a valid amount");
+    alert("Please Enter a Valid Amount");
     amount=1;
     amount.value="1";
-    
   }
-  console.log(fromCurr.value);
-  console.log(toCurr.value);
-  console.log(inp.value);
-  
 
+  if(fromCurr.value==="" || toCurr.value==="")
+  {
+    alert("Please Select The Options");
+    fromCurr.value="USD";
+    toCurr.value="INR"
+  }
+//swaping
+
+let a=fromCurr.value;
+let b=toCurr.value;
+let temp;
+
+swap.addEventListener("click",()=>{
+  let opt1=document.querySelector(".one option");
+  let opt2=document.querySelector(".two option");
+  temp=a;
+  a=b;
+  b=temp;
+  fromCurr.value=a;
+  opt1.innerText=a;
+  flg1.src=`https://flagsapi.com/${countryList[a]}/flat/64.png`;
+  toCurr.value=b;
+  opt2.innerText=b;
+  flg2.src=`https://flagsapi.com/${countryList[b]}/flat/64.png`;
+})
 // get rate from api
 let code= await fetch(`${base_url}/${fromCurr.value}`);
 const result_code=await code.json();
-
 let exrate=result_code.conversion_rates[toCurr.value];
-
 final_result=(inp.value*exrate)
-console.log(final_result);
-
 result.innerText=`${inp.value} ${fromCurr.value} = ${final_result.toFixed(2)} ${toCurr.value}`;
 result.style.display="flex";
-
 })
+
+
+
+
+
+
 
 
 
